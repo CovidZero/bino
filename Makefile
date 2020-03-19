@@ -15,7 +15,10 @@ watch: build
 	modd
 
 package:
-	docker build . -t andrebq/covid0-backend:latest
+	docker build . -t covidzero/bino:latest
+
+run: package
+	docker run -p '8080:8080' -e COVID0_TEMP_BUCKET -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY covidzero/bino:latest
 
 devsetup:
 	mv go.mod go.mod

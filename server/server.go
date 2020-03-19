@@ -13,7 +13,7 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 	crawl := &Crawl{temp: storage}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/crawl/{source}", crawl.FetchData).Methods("POST")
+	r.HandleFunc("/crawl/ministerio_saude_brasil", crawl.FetchData).Methods("POST")
 
 	server := &http.Server{
 		Addr: bindAddr,

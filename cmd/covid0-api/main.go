@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 
 	"github.com/andrebq/covid0-backend/server"
@@ -15,15 +16,23 @@ var (
 func main() {
 	flag.Parse()
 
-	storage, err := storage.TempDB()
+	// TODO: usar context.WithCancel e integrar com signal.Notify para fazer um shutdown limpo da aplicação
+	rootCtx := context.Background()
+
+	if errList := storage.SaneEnv(); errList != nil {
+		for _, e := range errList {
+			log.Error().Err(e).Msg("Check if your environment configuration is correct")
+		}
+		log.Fatal().Msg("Your environment is not properly configured. Please check the log for more information")
+	}
+
+	storage, err := storage.TempDB(rootCtx)
 	if err != nil {
-		// não faz sentido iniciar a aplicação se não foi possível abrir o banco temporário
-		panic(err)
+		log.Fatal().Err(err).Msg("Unable to start storage")
 	}
 	server, err := server.NewAPI(*bindAddr, storage)
 	if err != nil {
-		// não faz sentido iniciar a aplicação se não foi possível abrir o socket
-		panic(err)
+		log.Fatal().Err(err).Msg("Unable to start server")
 	}
 
 	log.Info().Str("addr", *bindAddr).Msg("Starting server")
