@@ -90,7 +90,7 @@ func validCrawlDate(crawlDate time.Time) bool {
 	name, _ := crawlDate.Zone()
 	// INFO: arredonda para o minuto pois é a precisão máxima
 	round := crawlDate.Round(time.Minute)
-	return name == "utc" && round == crawlDate
+	return name == "UTC" && round == crawlDate
 }
 
 func validFormat(format string) bool {
