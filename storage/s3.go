@@ -79,7 +79,7 @@ func ComputeObjectName(source string, crawlDate time.Time, format string) (strin
 	if !validFormat(format) {
 		return "", errors.New("invalid format. please use json")
 	}
-	return fmt.Sprintf("%s/%s/rawData.%s", source, crawlDate.Format("2006-01-02"), crawlDate.Format("15_04"), format), nil
+	return fmt.Sprintf("%s/%s/rawData.%s.%s", source, crawlDate.Format("2006-01-02"), crawlDate.Format("15_04"), format), nil
 }
 
 func validSource(source string) bool {
