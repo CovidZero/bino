@@ -11,7 +11,7 @@ curl -X POST http://localhost:8080/crawl/ministerio_saude_brasil
 A operação acima irá baixar os dados do Ministério da Saúde e guardar em um bucket S3. A resposta segue o formato abaixo:
 
 ```
-{ "path": "2006-01-02/15_04/rawData.json"}
+{ "path": "ministerio_saude_brasil/2006-01-02/15_04/rawData.json"}
 ```
 
 ## Compilando
