@@ -1,13 +1,12 @@
-.PHONY: build tidy test package watch devsetup integration_test
+.PHONY: build tidy test package watch devsetup test run precommit setupprecommit setupmodd
 
 build:
 	go build ./...
 
-
 test: build
-	go test ./...
+	bash scripts/test/integration_test/test.sh
 
-tidy: build
+tidy: test
 	go mod tidy
 	go fmt ./...
 
@@ -20,10 +19,14 @@ package: tidy
 run: package
 	docker run -p '8080:8080' -e COVID0_TEMP_BUCKET -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY covidzero/bino:latest
 
-devsetup:
-	mv go.mod go.mod
+precommit: tidy
+
+devsetup: setupmodd setupprecommit
+
+setupmodd:
 	GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
 	go install github.com/cortesi/modd/cmd/modd
 
-integration_test:
-	bash scripts/test/integration_test/test.sh
+setupprecommit:
+	chmod u+x scripts/githooks/pre-commit.sh
+	cp scripts/githooks/pre-commit.sh .git/hooks/pre-commit.sh

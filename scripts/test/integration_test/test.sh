@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# TODO: incluir um target no Makefile para validar esse script usando shellcheck (via docker)
+# provavelmente deixei algo passar
+
 set -euo pipefail
 
 readonly initialFolder=$(pwd)
