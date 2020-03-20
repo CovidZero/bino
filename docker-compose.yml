@@ -5,7 +5,7 @@ services:
     image: covid0-backend
     build: .
     deploy:
-      replicas: 2
+      replicas: 1
     environment:
       COVID0_TEMP_BUCKET:
       AWS_ACCESS_KEY_ID:
