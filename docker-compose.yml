@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  covid0-backend:
+    image: covid0-backend
+    build: .
+    deploy:
+      replicas: 2
+    environment:
+      COVID0_TEMP_BUCKET:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+    ports:
+      - "8080:8080"
