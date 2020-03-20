@@ -29,4 +29,4 @@ setupmodd:
 
 setupprecommit:
 	chmod u+x scripts/githooks/pre-commit.sh
-	cp scripts/githooks/pre-commit.sh .git/hooks/pre-commit.sh
+	cp scripts/githooks/pre-commit.sh .git/hooks/pre-commit
