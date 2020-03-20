@@ -6,6 +6,8 @@ import (
 
 	"github.com/andrebq/covid0-backend/storage"
 	"github.com/gorilla/mux"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // NewAPI retorna um servidor HTTP pré-configurado que guarda as informações temporárias no storage informado
@@ -30,3 +32,11 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 	}
 	return server, nil
 }
+
+var responseLogger = log.Sample(zerolog.LevelSampler{
+	DebugSampler: &zerolog.BurstSampler{
+		Burst:       5,
+		Period:      1 * time.Second,
+		NextSampler: &zerolog.BasicSampler{N: 100},
+	},
+})

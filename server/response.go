@@ -11,6 +11,8 @@ func respondWithJSON(w io.Writer, req *http.Request, data interface{}) {
 	err := enc.Encode(data)
 	if err != nil {
 		// TODO incluir logging com um sample rate, para impedir DoS via Log, por hora, só ignora
+		responseLogger.Debug().Msg("Error encoding data")
 		return
 	}
+
 }
