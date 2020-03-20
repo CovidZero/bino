@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mitchellh/go-homedir"
 	"gocloud.dev/blob"
 )
 
@@ -42,19 +41,7 @@ func SaneEnv() []error {
 	}
 
 	if os.Getenv("AWS_ACCESS_KEY_ID") == "" {
-		// INFO: checar se o caminho ~/.aws/credentials existe
-		if path, err := homedir.Expand("~/.aws/credentials"); err != nil {
-			errList = append(errList, fmt.Errorf("unable to open home dir, cause: %v", err))
-		} else {
-			_, err = os.Lstat(path)
-			if os.IsNotExist(err) {
-				errList = append(errList, fmt.Errorf(
-					"missing AWS shared configuration at %v (check: https://docs.aws.amazon.com/sdk-for-go/api/aws/session/#hdr-Shared_Config_Fields), cause: %w",
-					path, err))
-			} else if err != nil {
-				errList = append(errList, fmt.Errorf("unexpected error while checking path %v, cause %w", path, err))
-			}
-		}
+		// TODO: verificar como validar caso não sejam passadas as variáveis de ambiente
 	} else if os.Getenv("AWS_SECRET_ACCESS_KEY") == "" {
 		errList = append(errList, errors.New("missing AWS environment variable AWS_SECRET_ACCESS_KEY"))
 	}
