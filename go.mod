@@ -1,9 +1,8 @@
-module github.com/andrebq/covid0-backend
+module github.com/CovidZero/bino
 
 go 1.13
 
 require (
-	github.com/cortesi/modd v0.0.0-20191202231957-98a770274f90 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/mitchellh/go-homedir v1.1.0
