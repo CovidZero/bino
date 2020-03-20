@@ -1,4 +1,4 @@
-.PHONY: build tidy test package watch devsetup
+.PHONY: build tidy test package watch devsetup integration_test
 
 build:
 	go build ./...
@@ -24,3 +24,7 @@ devsetup:
 	mv go.mod go.mod
 	GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
 	go install github.com/cortesi/modd/cmd/modd
+
+integration_test:
+	cd test-compose && docker-compose up -d
+	go run internal/testutil/waitfor/main.go -a "localhost:4572"
