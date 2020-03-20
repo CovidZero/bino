@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 
-	"github.com/andrebq/covid0-backend/server"
-	"github.com/andrebq/covid0-backend/storage"
+	"github.com/CovidZero/bino/server"
+	"github.com/CovidZero/bino/storage"
 	"github.com/rs/zerolog/log"
 )
 

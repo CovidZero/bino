@@ -1,16 +1,15 @@
 FROM golang:alpine3.11 as builder
 
-COPY go.mod go.sum /usr/src/covid0-backend/
-WORKDIR /usr/src/covid0-backend
+COPY go.mod go.sum /usr/src/bino/
+WORKDIR /usr/src/bino
 RUN go mod download
 
-COPY . /usr/src/covid0-backend
-RUN go build -o /usr/local/bin/covid-api ./cmd/covid0-api
+COPY . /usr/src/bino
+RUN go build -o /usr/local/bin/bino ./cmd/bino
 
 FROM alpine:3.11
-COPY --from=builder /usr/local/bin/covid-api /usr/local/bin
-RUN mkdir -p /var/covid0-api/temp-storage/covid0.db
+COPY --from=builder /usr/local/bin/bino /usr/local/bin
 
 EXPOSE 8080
 
-CMD [ "/usr/local/bin/covid-api" ]
+CMD [ "/usr/local/bin/bino" ]

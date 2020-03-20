@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/andrebq/covid0-backend/storage"
+	"github.com/CovidZero/bino/storage"
 	"github.com/gorilla/mux"
 )
 
