@@ -14,7 +14,7 @@ tidy: build
 watch: build
 	modd
 
-package:
+package: tidy
 	docker build . -t covidzero/bino:latest
 
 run: package
@@ -26,5 +26,4 @@ devsetup:
 	go install github.com/cortesi/modd/cmd/modd
 
 integration_test:
-	cd test-compose && docker-compose up -d
-	go run internal/testutil/waitfor/main.go -a "localhost:4572"
+	bash scripts/test/integration_test/test.sh
