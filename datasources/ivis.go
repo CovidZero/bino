@@ -20,7 +20,11 @@ type (
 )
 
 const (
+	// IVISDatasetDefaultURL é a URL padrão a ser utilizada caso a variável DATASOURCE_IVIS_URL não exista
 	IVISDatasetDefaultURL = "http://plataforma.saude.gov.br/novocoronavirus/resources/scripts/database.js"
+
+	// IVISDatasetname é o nome pelo qual o dataset será referenciado na S3
+	IVISDatasetName = "ministerio_saude_brasil"
 )
 
 var (
@@ -28,7 +32,7 @@ var (
 )
 
 // Name identificar o dataset
-func (i *IVISDataset) Name() string { return "ministerio_saude_brasil" }
+func (i *IVISDataset) Name() string { return IVISDatasetName }
 
 // Format retorna o formato no qual os dados são coletados
 func (i *IVISDataset) Format() Format {

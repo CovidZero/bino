@@ -45,8 +45,13 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 }
 
 func setupDatasourcesRoutes(r *mux.Router, storage storage.Temp) error {
-	if err := registerCrawlEndpoint(r, storage, "ministerio_saude_brasil"); err != nil {
-		return err
+	names := datasources.AllOnDemand()
+	for _, name := range names {
+		if err := registerCrawlEndpoint(r, storage, name); err != nil {
+			log.Error().Err(err).Str("module", "setup-datasources").Str("datasourceName", name).Msg("Unable to configure datasource, will SKIP!!!!")
+		} else {
+			log.Info().Str("module", "setup-datasources").Str("datasourceName", name).Msg("Datasource available")
+		}
 	}
 	return nil
 }

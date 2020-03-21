@@ -8,7 +8,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/CovidZero/bino/datasources"
 	"github.com/CovidZero/bino/internal/testutil"
 )
 
@@ -20,24 +19,19 @@ func TestIVISCrawl(t *testing.T) {
 	ivisMockServer := testutil.ServeFile([]byte(fmt.Sprintf("var database=%v", fakeContent)))
 	defer ivisMockServer.Close()
 	defer testutil.ChangeEnv("DATASOURCE_IVIS_URL", ivisMockServer.URL)()
-	ivisSource, err := datasources.GetOnDemand("ministerio_saude_brasil")
-	if err != nil {
-		t.Fatal(err)
-	}
 
 	db, getContent := testutil.TempDB(ctx, t)
 
-	crawler := &Crawl{
-		source: ivisSource,
-		temp:   db,
+	crawlers, err := allCollectors(db)
+	if err != nil {
+		t.Fatal(err)
 	}
-
-	server := httptest.NewServer(http.HandlerFunc(crawler.FetchData))
+	server := httptest.NewServer(crawlers)
 	defer server.Close()
 	response := struct {
 		Path string `json:"path"`
 	}{}
-	status := testutil.POSTRaw(t, server.URL, "application/json", nil, &response, json.Unmarshal)
+	status := testutil.POSTRaw(t, server.URL+"/crawl/ministerio_saude_brasil", "application/json", nil, &response, json.Unmarshal)
 	if status != http.StatusOK {
 		t.Fatalf("crawlers should always return 200 (at least for now...) but got %v", status)
 	}
