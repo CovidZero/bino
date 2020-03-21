@@ -73,9 +73,6 @@ func ComputeObjectName(source string, crawlDate time.Time, format string) (strin
 		return "", errors.New("invalid crawl data. precision is limited to the minute")
 	}
 
-	if !validFormat(format) {
-		return "", errors.New("invalid format. please use json")
-	}
 	// INFO: formato deve ser <source>/<ano-mes-dia>/<hora-minuto>/rawData.<formato>
 	return fmt.Sprintf("%s/%s/%s/rawData.%s", source, crawlDate.Format("2006-01-02"), crawlDate.Format("15-04"), format), nil
 }
@@ -83,8 +80,4 @@ func ComputeObjectName(source string, crawlDate time.Time, format string) (strin
 func validCrawlDate(crawlDate time.Time) bool {
 	name, _ := crawlDate.Zone()
 	return name == "UTC"
-}
-
-func validFormat(format string) bool {
-	return format == "json"
 }
