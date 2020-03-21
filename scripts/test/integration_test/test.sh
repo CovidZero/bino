@@ -8,6 +8,10 @@ set -euo pipefail
 readonly initialFolder=$(pwd)
 readonly composeFolder="${initialFolder}/test-compose/"
 
+export COVID0_TEMP_BUCKET='s3://mybucket?region=some&endpoint=localhost:4572&disableSSL=true&s3ForcePathStyle=true'
+export AWS_ACCESS_KEY_ID='keyid'
+export AWS_SECRET_ACCESS_KEY='keyval'
+
 function docker-compose-down {
     cd "${composeFolder}"
     docker-compose down
@@ -20,14 +24,12 @@ function docker-compose-up {
 
 function go-test {
     cd "${initialFolder}"
-    export COVID0_TEMP_BUCKET='s3://mybucket?region=some&endpoint=localhost:4572&disableSSL=true&s3ForcePathStyle=true'
-    export AWS_ACCESS_KEY_ID='keyid'
-    export AWS_SECRET_ACCESS_KEY='keyval'
     go test ./...
 }
 
 function wait-for-localstack {
     go run "${initialFolder}/scripts/test/waitfor/main.go" -a "localhost:4572"
+    go run "${initialFolder}/scripts/test/bucketcreated/main.go" -a "${COVID0_TEMP_BUCKET}"
 }
 
 trap 'docker-compose-down' EXIT

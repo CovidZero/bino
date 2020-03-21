@@ -69,10 +69,6 @@ func (s *S3Storage) StoreCrawl(ctx context.Context, source string, crawlDate tim
 
 // ComputeObjectName retorna o nome de um objeto na S3 que identifica uma coleta
 func ComputeObjectName(source string, crawlDate time.Time, format string) (string, error) {
-	if !validSource(source) {
-		return "", errors.New("invalid source. please try again")
-	}
-
 	if !validCrawlDate(crawlDate) {
 		return "", errors.New("invalid crawl data. precision is limited to the minute")
 	}
@@ -82,10 +78,6 @@ func ComputeObjectName(source string, crawlDate time.Time, format string) (strin
 	}
 	// INFO: formato deve ser <source>/<ano-mes-dia>/<hora-minuto>/rawData.<formato>
 	return fmt.Sprintf("%s/%s/%s/rawData.%s", source, crawlDate.Format("2006-01-02"), crawlDate.Format("15-04"), format), nil
-}
-
-func validSource(source string) bool {
-	return source == "ministerio_saude_brasil"
 }
 
 func validCrawlDate(crawlDate time.Time) bool {

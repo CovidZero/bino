@@ -1,9 +1,11 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/CovidZero/bino/datasources"
 	"github.com/CovidZero/bino/storage"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
@@ -12,10 +14,11 @@ import (
 
 // NewAPI retorna um servidor HTTP pré-configurado que guarda as informações temporárias no storage informado
 func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
-	crawl := &Crawl{temp: storage}
-
 	r := mux.NewRouter()
-	r.HandleFunc("/crawl/ministerio_saude_brasil", crawl.FetchData).Methods("POST")
+	err := setupDatasourcesRoutes(r, storage)
+	if err != nil {
+		return nil, err
+	}
 
 	server := &http.Server{
 		Addr: bindAddr,
@@ -31,6 +34,26 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 		Handler: r,
 	}
 	return server, nil
+}
+
+func setupDatasourcesRoutes(r *mux.Router, storage storage.Temp) error {
+	if err := registerCrawlEndpoint(r, storage, "ministerio_saude_brasil"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func registerCrawlEndpoint(r *mux.Router, storage storage.Temp, name string) error {
+	source, err := datasources.GetOnDemand(name)
+	if err != nil {
+		return err
+	}
+	crawl := &Crawl{
+		source: source,
+		temp:   storage,
+	}
+	r.HandleFunc(fmt.Sprintf("/crawl/%s", source.Name()), crawl.FetchData).Methods("POST")
+	return nil
 }
 
 var responseLogger = log.Sample(zerolog.LevelSampler{
