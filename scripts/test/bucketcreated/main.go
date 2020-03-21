@@ -1,10 +1,10 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 	"time"
-	"context"
 
 	"github.com/rs/zerolog/log"
 

@@ -1,6 +1,9 @@
 package datasources
 
-import "errors"
+import (
+	"errors"
+	"os"
+)
 
 var (
 	errMissingDatasource = errors.New("datasource name is not valid")
@@ -11,7 +14,9 @@ func GetOnDemand(name string) (OnDemand, error) {
 	// TODO: pensar em uma forma de registrar os datasources, por hora isso arquivo resolve
 	switch name {
 	case "ministerio_saude_brasil":
-		return &IVISDataset{}, nil
+		return &IVISDataset{
+			endpoint: os.Getenv("DATASOURCE_IVIS_URL"),
+		}, nil
 	}
 	return nil, errMissingDatasource
 }

@@ -12,10 +12,18 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// NewAPI retorna um servidor HTTP pré-configurado que guarda as informações temporárias no storage informado
-func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
+func allCollectors(storage storage.Temp) (http.Handler, error) {
 	r := mux.NewRouter()
 	err := setupDatasourcesRoutes(r, storage)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+// NewAPI retorna um servidor HTTP pré-configurado que guarda as informações temporárias no storage informado
+func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
+	collectors, err := allCollectors(storage)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +39,7 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 		WriteTimeout:   time.Second * 10,
 		MaxHeaderBytes: 1 * 1024 * 1024 * 1024,
 
-		Handler: r,
+		Handler: collectors,
 	}
 	return server, nil
 }
