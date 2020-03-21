@@ -23,6 +23,7 @@ type (
 
 // StoreCrawl guarda "data" em um bucket identificado pela origem e crawData
 func (s *S3Storage) StoreCrawl(ctx context.Context, source string, crawlDate time.Time, format string, data []byte) (string, error) {
+	crawlDate = crawlDate.Truncate(time.Minute)
 	objName, err := ComputeObjectName(source, crawlDate, format)
 	if err != nil {
 		return "", err
@@ -73,7 +74,7 @@ func ComputeObjectName(source string, crawlDate time.Time, format string) (strin
 	}
 
 	if !validCrawlDate(crawlDate) {
-		return "", errors.New("invalid crawl data. precision is limited to the hour")
+		return "", errors.New("invalid crawl data. precision is limited to the minute")
 	}
 
 	if !validFormat(format) {
@@ -89,9 +90,7 @@ func validSource(source string) bool {
 
 func validCrawlDate(crawlDate time.Time) bool {
 	name, _ := crawlDate.Zone()
-	// INFO: arredonda para o minuto pois é a precisão máxima
-	round := crawlDate.Round(time.Minute)
-	return name == "UTC" && round == crawlDate
+	return name == "UTC"
 }
 
 func validFormat(format string) bool {

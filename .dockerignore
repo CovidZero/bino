@@ -1,3 +1,5 @@
 Makefile
 Dockerfile
 .git
+test-compose
+README.md

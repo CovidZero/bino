@@ -48,7 +48,7 @@ func (c *Crawl) FetchData(w http.ResponseWriter, req *http.Request) {
 		buf = buf[len("var database="):]
 	}
 
-	name, err := c.temp.StoreCrawl(req.Context(), "ministerio_saude_brasil", time.Now().Round(time.Minute), "json", buf)
+	name, err := c.temp.StoreCrawl(req.Context(), "ministerio_saude_brasil", time.Now().UTC(), "json", buf)
 	if err != nil {
 		log.Error().Err(err).Str("module", "crawl").Msg("Unable to send data to temporary db")
 		return

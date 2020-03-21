@@ -14,9 +14,21 @@ A operação acima irá baixar os dados do Ministério da Saúde e guardar em um
 { "path": "ministerio_saude_brasil/2006-01-02/15-04/rawData.json"}
 ```
 
+## Setup do ambiente de dev
+
+- Unix based (macos, wsl2, linux)
+- Go SDK (1.13 no mínimo)
+- Rode `make devsetup` (instala um git-hook para pre-commit)
+
 ## Compilando
 
 Tenha a versão 1.13 da SDK GO e rode `make build`
+
+## Testando
+
+`make test` sobe o ambiente de suporte de teste (localstack) e roda todos os tests da aplicação.
+
+Detalhes da execução estão em `scripts/test/integration_test.sh`
 
 ## Empacotando
 

@@ -6,6 +6,7 @@ require (
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/zerolog v1.18.0
 	gocloud.dev v0.19.0
 	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933 // indirect
