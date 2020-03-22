@@ -1,21 +1,32 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/CovidZero/bino/datasources"
 	"github.com/CovidZero/bino/storage"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
+func allCollectors(storage storage.Temp) (http.Handler, error) {
+	r := mux.NewRouter()
+	err := setupDatasourcesRoutes(r, storage)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
 // NewAPI retorna um servidor HTTP pré-configurado que guarda as informações temporárias no storage informado
 func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
-	crawl := &Crawl{temp: storage}
-
-	r := mux.NewRouter()
-	r.HandleFunc("/crawl/ministerio_saude_brasil", crawl.FetchData).Methods("POST")
+	collectors, err := allCollectors(storage)
+	if err != nil {
+		return nil, err
+	}
 
 	server := &http.Server{
 		Addr: bindAddr,
@@ -28,9 +39,34 @@ func NewAPI(bindAddr string, storage storage.Temp) (*http.Server, error) {
 		WriteTimeout:   time.Second * 10,
 		MaxHeaderBytes: 1 * 1024 * 1024 * 1024,
 
-		Handler: r,
+		Handler: collectors,
 	}
 	return server, nil
+}
+
+func setupDatasourcesRoutes(r *mux.Router, storage storage.Temp) error {
+	names := datasources.AllOnDemand()
+	for _, name := range names {
+		if err := registerCrawlEndpoint(r, storage, name); err != nil {
+			log.Error().Err(err).Str("module", "setup-datasources").Str("datasourceName", name).Msg("Unable to configure datasource, will SKIP!!!!")
+		} else {
+			log.Info().Str("module", "setup-datasources").Str("datasourceName", name).Msg("Datasource available")
+		}
+	}
+	return nil
+}
+
+func registerCrawlEndpoint(r *mux.Router, storage storage.Temp, name string) error {
+	source, err := datasources.GetOnDemand(name)
+	if err != nil {
+		return err
+	}
+	crawl := &Crawl{
+		source: source,
+		temp:   storage,
+	}
+	r.HandleFunc(fmt.Sprintf("/crawl/%s", source.Name()), crawl.FetchData).Methods("POST")
+	return nil
 }
 
 var responseLogger = log.Sample(zerolog.LevelSampler{

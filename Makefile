@@ -1,9 +1,14 @@
-.PHONY: build tidy test package watch devsetup test run precommit setupprecommit setupmodd
+.PHONY: build tidy test package watch devsetup test run precommit setupprecommit setupmodd testscompile
 
 build:
 	go build ./...
 
-test: build
+# apenas checando se os tests compilam, pois como rodamos todos os testes o tempo todo
+# esperar todo o ambiente de teste ser carregado para depois receber erros de compilação
+testscompile:
+	go test -run='^$$' ./...
+
+test: build testscompile
 	bash scripts/test/integration_test/test.sh
 
 tidy: test
