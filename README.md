@@ -14,6 +14,30 @@ A operação acima irá baixar os dados do Ministério da Saúde e guardar em um
 { "path": "ministerio_saude_brasil/2006-01-02/15-04/rawData.json"}
 ```
 
+```
+curl -X GET http://localhost:8080/crawlers
+```
+
+A operação acima irá retornar uma lista de quais coletores estão configurados e disponíveis para execução
+
+```js
+{
+	"crawlers": [{
+		"name": "ministerio_saude_brasil",
+		"format": "json",
+		"contentType": "application/json",
+		"encoding": "iso-8859-1",
+		"available": true
+	}, {
+		"name": "brasil_io_covid19",
+		"format": "csv",
+		"contentType": "text/csv",
+		"encoding": "utf-8",
+		"available": true
+	}]
+}
+```
+
 ## Setup do ambiente de dev
 
 - Unix based (macos, wsl2, linux)

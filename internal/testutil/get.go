@@ -17,7 +17,6 @@ func GET(t *testing.T, url string, out interface{}, codec func([]byte, interface
 	if err != nil {
 		t.Fatalf("Status %v / Error: %v", res.StatusCode, err)
 	}
-	println(string(data))
 	err = codec(data, out)
 	if err != nil {
 		t.Fatalf("Status %v / Error: %v", res.StatusCode, err)
