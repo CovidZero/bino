@@ -2,11 +2,12 @@ package server
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 )
 
-func respondWithJSON(w io.Writer, req *http.Request, data interface{}) {
+func respondWithJSON(w http.ResponseWriter, status int, req *http.Request, data interface{}) {
+	w.Header().Add("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(status)
 	enc := json.NewEncoder(w)
 	err := enc.Encode(data)
 	if err != nil {

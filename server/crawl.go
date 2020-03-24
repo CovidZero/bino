@@ -21,20 +21,22 @@ type (
 // retorna a última coleta feita.
 func (c *Crawl) FetchData(w http.ResponseWriter, req *http.Request) {
 	now := time.Now().UTC().Truncate(time.Minute)
-	buf, err := c.source.Collect(now)
+	// TODO: nem sempre os dados viram como formulario, sendo assim, seria interessante tratar o content-type da requisição
+	req.ParseForm()
+	buf, err := c.source.Collect(now, req.Form)
 	if err != nil {
 		log.Error().Err(err).Str("module", "crawl").Str("source", c.source.Name()).Msg("Error reading data from source")
 		http.Error(w, "Unexpected error. Try again later", http.StatusBadGateway)
 		return
 	}
 
-	name, err := c.temp.StoreCrawl(req.Context(), "ministerio_saude_brasil", now, c.source.Format().Ext(), buf)
+	name, err := c.temp.StoreCrawl(req.Context(), c.source.Name(), now, c.source.Format().Ext(), buf)
 	if err != nil {
 		log.Error().Err(err).Str("module", "crawl").Msg("Unable to send data to temporary db")
 		http.Error(w, "Unexpected error. Try again later", http.StatusBadGateway)
 		return
 	}
-	respondWithJSON(w, req, struct {
+	respondWithJSON(w, http.StatusOK, req, struct {
 		Path string `json:"path"`
 	}{Path: name})
 }

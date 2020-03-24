@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -46,7 +47,7 @@ func (i *IVISDataset) Encoding() string {
 }
 
 // Collect aciona o serviço e roda uma coleta
-func (i *IVISDataset) Collect(_ time.Time) ([]byte, error) {
+func (i *IVISDataset) Collect(_ time.Time, _ url.Values) ([]byte, error) {
 	// TODO: gerar os logs aqui é incorreto pois isso é responsabilidade de quem chamou, mas por hora serve
 	// TODO: checar se podemos trocar por https para garantir integridade dos dados
 	// TODO: atlerar o http client e incluir um timeout para proteger o nosso processo caso o servidor remoto esteja muito lento

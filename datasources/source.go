@@ -1,6 +1,9 @@
 package datasources
 
-import "time"
+import (
+	"net/url"
+	"time"
+)
 
 type (
 	// OnDemand indica data sources que retornam os dados em batches, normalmente não são atualizados com grande
@@ -16,6 +19,8 @@ type (
 		Encoding() string
 
 		// Collect executa uma coleta de dados e retorna quando a coleta estiver concluída
-		Collect(time.Time) ([]byte, error)
+		//
+		// O segundo argumento pode ser usado para configurar os parametros da coleta
+		Collect(time.Time, url.Values) ([]byte, error)
 	}
 )
