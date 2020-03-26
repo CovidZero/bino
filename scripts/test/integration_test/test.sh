@@ -14,12 +14,12 @@ export AWS_SECRET_ACCESS_KEY='keyval'
 
 function docker-compose-down {
     cd "${composeFolder}"
-    #docker-compose down
+    docker-compose down
 }
 
 function docker-compose-up {
     cd "${composeFolder}"
-    #docker-compose up -d
+    docker-compose up -d
 }
 
 function go-test {
@@ -28,8 +28,8 @@ function go-test {
 }
 
 function wait-for-localstack {
-    #go run "${initialFolder}/scripts/test/waitfor/main.go" -a "localhost:4572"
-    #go run "${initialFolder}/scripts/test/bucketcreated/main.go" -a "${COVID0_TEMP_BUCKET}"
+    go run "${initialFolder}/scripts/test/waitfor/main.go" -a "localhost:4572"
+    go run "${initialFolder}/scripts/test/bucketcreated/main.go" -a "${COVID0_TEMP_BUCKET}"
     true
 }
 

@@ -18,6 +18,7 @@ func allCollectors(storage storage.Temp) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
+	r.HandleFunc("/crawlers", (CrawlerList{}).GetAvailable).Methods("GET")
 	return r, nil
 }
 

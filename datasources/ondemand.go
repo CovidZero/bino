@@ -2,6 +2,7 @@ package datasources
 
 import (
 	"errors"
+	"net/url"
 	"os"
 )
 
@@ -13,6 +14,7 @@ var (
 func AllOnDemand() []string {
 	return []string{
 		IVISDatasetName,
+		BrasilIOCovid19DatasetName,
 	}
 }
 
@@ -23,6 +25,18 @@ func GetOnDemand(name string) (OnDemand, error) {
 	case IVISDatasetName:
 		return &IVISDataset{
 			endpoint: os.Getenv("DATASOURCE_IVIS_URL"),
+		}, nil
+	case BrasilIOCovid19DatasetName:
+		endpoint := os.Getenv("DATASOURCE_BRASIL_IO_COVID19_URL")
+		if endpoint == "" {
+			return &BrasilIOCovid19Dataset{}, nil
+		}
+		u, err := url.Parse(endpoint)
+		if err != nil {
+			return nil, err
+		}
+		return &BrasilIOCovid19Dataset{
+			endpoint: u,
 		}, nil
 	}
 	return nil, errMissingDatasource
