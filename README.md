@@ -1,6 +1,10 @@
+# PROJETO ARQUIVADO E FORA DE UTILIZAÇÃO
+
 # bino - transferindo dados de um lugar para outro
 
 Bino é uma API que permite a seus usuários transferir dados de diferentes origens para um bucket S3.
+
+O projeto em questão consiste em ler os dados relacionados ao COVID-19 do Ministério da Saude e do portal [Brasil.IO](https://brasil.io/home/) e transformá-los em dados inseridos/atualizados em um banco de dados Postgres.
 
 ## API
 
